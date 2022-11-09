@@ -1,0 +1,56 @@
+create database insurance;
+use insurance;
+create table person
+(driver_id char(10),
+name varchar(20),
+address varchar(20),
+primary key(driver_id));
+show tables;
+desc person;
+create table car
+(reg_num char(10),
+model varchar(15),
+year year,
+primary key(reg_num));
+create table owns
+(driver_id char(10),
+reg_num char(10),
+primary key(driver_id,reg_num),
+foreign key(driver_id) references person(driver_id) on update cascade,
+foreign key(reg_num) references car(reg_num) on update cascade);
+create table accident
+(report_num varchar(10),
+accident_date date,
+location varchar(15),
+primary key(report_num));
+create table participated
+(driver_id char(10),
+reg_num char(10),
+report_num varchar(10),
+damage_amount varchar(10),
+primary key(driver_id,reg_num,report_num),
+foreign key(driver_id) references person(driver_id) on update cascade,
+foreign key(reg_num) references car(reg_num) on update cascade,
+foreign key(report_num) references accident(report_num) on update cascade);
+insert into person values('A01','Richard','Srinivas nagar'),('A02','Pradeep','Rajaji nagar'),
+('A03','Smith','Ashok nagar'),('A04','Venu','NR Colony'),('A05','Jhon','Hanumanth nagar');
+select * from car;
+insert into car values('KA052250','Indica','1990'),('KA031181','Lancer','1957'),
+('KA095477','Toyota','1998'),('KA053408','Honda','2008'),('KA041702','Audi','2005');
+insert into accident values(11,'2003-01-01','Mysore Road'),(12,'2004-02-02','South end circle'),
+(13,'2003-01-21','Bull temple Road'),(14,'2008-02-17','Mysore Road'),(15,'2005-03-04','Kanakpura Road');
+alter table accident modify location varchar(30);
+select * from accident;
+insert into owns values('A01','KA052250'),('A02','KA053408'),('A03','KA031181'),('A04','KA095477'),('A05','KA041702');
+select * from owns;
+insert into participated values('A01','KA052250',11,10000),('A02','KA053408',12,50000),('A03','KA095477',13,25000),
+('A04','KA031181',14,3000),('A05','KA041702',15,5000);
+select * from participated;
+
+select * from participated order by damage_amount desc;
+select avg(damage_amount) from participated;
+
+select accident_date,location from accident;
+select driver_id from participated where damage_amount >= 25000;
+
+
